@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Earthquake Visualization</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+</head>
+<body>
+  <div id="map" style="height: 500px;"></div>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script>
+    // Create the Leaflet map
+    const map = L.map('map').setView([0, 0], 2);
+
+    // Add the basemap (you can choose different ones if you like)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    // Function to get the marker size based on magnitude
+    function getMarkerSize(magnitude) {
+      return magnitude * 5;
+    }
+
+    // Function to get the marker color based on depth
+    function getMarkerColor(depth) {
+      return depth > 70 ? '#d73027' : '#1a9850';
+    }
+
+    // Fetch earthquake data from the provided URL
+    fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson')
+      .then(response => response.json())
+      .then(data => {
+        // Loop through the earthquake data and create markers
+        data.features.forEach(quake => {
+          const { mag, place, depth } = quake.properties;
+          const [lat, lng] = quake.geometry.coordinates;
+          
+          // Create the marker and customize it based on magnitude and depth
+          L.circleMarker([lat, lng], {
+            radius: getMarkerSize(mag),
+            fillColor: getMarkerColor(depth),
+            color: '#000',
+            weight: 1,
+            opacity: 1,
+            fillOpacity: 0.8
+          }).bindPopup(`Magnitude: ${mag}<br>Location: ${place}<br>Depth: ${depth}`).addTo(map);
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching earthquake data:', error);
+      });
+
+    // Create the legend
+    const legend = L.control({ position: 'bottomright' });
+    legend.onAdd = function () {
+      const div = L.DomUtil.create('div', 'info legend');
+      div.innerHTML = `
+        <i style="background: #1a9850"></i> Depth &lt; 70<br>
+        <i style="background: #d73027"></i> Depth &gt;= 70
+      `;
+      return div;
+    };
+    legend.addTo(map);
+  </script>
+</body>
+</html>
