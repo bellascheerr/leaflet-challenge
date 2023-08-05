@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Earthquake Visualization</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+</head>
+<body>
+  <div id="map" style="height: 500px;"></div>
+  <div id="legend" style="background-color: #fff; padding: 10px; border-radius: 5px; position: absolute; bottom: 30px; right: 30px;">
+    <h4>Earthquake Magnitude</h4>
+    <div><i style="background: #feebe2;"></i> 4.0 - 4.9</div>
+    <div><i style="background: #fbb4b9;"></i> 5.0 - 5.9</div>
+    <div><i style="background: #f768a1;"></i> 6.0 - 6.9</div>
+    <div><i style="background: #ae017e;"></i> 7.0 - 7.9</div>
+    <div><i style="background: #7a0177;"></i> 8.0+</div>
+  </div>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
